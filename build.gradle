@@ -1,0 +1,40 @@
+import java.time.Clock
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.google.cloud.tools.jib' version '2.6.0'
+}
+
+group 'dev.gigafyde'
+version '1.0-SNAPSHOT'
+mainClassName = 'dev.gigafyde.arizoomii.Main'
+sourceCompatibility = 11
+
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile("net.dv8tion:JDA:4.2.0_211") {
+        exclude module: "opus-java"
+    }
+}
+
+jib {
+    container {
+        mainClassName='dev.gigafyde.arizoomii.Main'
+        creationTime = Clock.systemUTC().instant()
+    }
+}
+
+compileJava {
+    classpath = sourceSets.main.compileClasspath
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
