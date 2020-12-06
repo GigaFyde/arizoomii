@@ -10,6 +10,7 @@ steps:
         from_secret: webhook_id
       webhook_token:
         from_secret: webhook_token
+
   - name: build
     image: gradle:jdk11
     environment:
@@ -17,6 +18,18 @@ steps:
         from_secret: dockerhub
     commands:
       - gradle jib --image=gigafyde/arizoomi:latest -Djib.to.auth.username=gigafyde -Djib.to.auth.password=$DOCKERHUB
+    when:
+      branch:
+        - main
+
+  - name: test
+    image: gradle:jdk11
+    commands:
+      - gradle build
+    when:
+      branch:
+        - dev
+
   - name: discord-notify
     image: appleboy/drone-discord
     when:
