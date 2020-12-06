@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    compile("net.dv8tion:JDA:4.2.0_222") {
+    implementation("net.dv8tion:JDA:4.2.0_222") {
         exclude module: "opus-java"
     }
 }
@@ -37,4 +37,6 @@ compileJava {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
 }
