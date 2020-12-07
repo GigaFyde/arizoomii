@@ -17,7 +17,7 @@ steps:
       DOCKERHUB:
         from_secret: dockerhub
     commands:
-      - gradle jib --image=gigafyde/arizoomi:latest -Djib.to.auth.username=gigafyde -Djib.to.auth.password=$DOCKERHUB
+      - gradle jib --image=gigafyde/arizoomii:latest -Djib.to.auth.username=gigafyde -Djib.to.auth.password=$DOCKERHUB
     when:
       branch:
         - main
