@@ -1,4 +1,4 @@
-package dev.gigafyde.arizoomii;
+package dev.gigafyde.arizoomii.listeners;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
