@@ -15,7 +15,6 @@ targetCompatibility = 11
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
@@ -25,9 +24,7 @@ repositories {
 dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     implementation group: 'com.google.guava', name: 'guava', version: '27.0-jre'
-    implementation("net.dv8tion:JDA:4.2.0_247") {
-        exclude module: "opus-java"
-    }
+    compile("net.dv8tion:JDA:4.2.1_253")
 }
 
 jib {
