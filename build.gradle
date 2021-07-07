@@ -22,9 +22,19 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    implementation group: 'com.google.guava', name: 'guava', version: '27.0-jre'
-    compile("net.dv8tion:JDA:4.2.1_253")
+    implementation 'io.sentry:sentry-logback:4.0.0'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation group: 'org.json', name: 'json', version: '20200518'
+    // https://bintray.com/dv8fromtheworld/maven/JDA/4.2.0_227
+    implementation("net.dv8tion:JDA:4.3.0_277") {
+        exclude module: "opus-java"
+    }
 }
 
 jib {

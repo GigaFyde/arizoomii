@@ -3,6 +3,7 @@ package dev.gigafyde.arizoomii.listeners;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import dev.gigafyde.arizoomii.utils.Emotes;
+import dev.gigafyde.arizoomii.utils.Haste;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -10,7 +11,6 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
@@ -60,7 +60,9 @@ public class ServerLogListener extends ListenerAdapter {
 
     private String haste(String message) {
         if (message.length() > 500) {
-            return "Message too long ";
+            String key = Haste.paste(message);
+            if (key == null) return "Message too long, Failed to create link";
+            return "Message too long " + key;
         }
         return message;
     }
@@ -88,7 +90,9 @@ public class ServerLogListener extends ListenerAdapter {
     }
 
     private void log(String message) {
-        serverlog.sendMessage(message).queue(msg -> modlogCache.put(msg.getIdLong(), msg));
+        serverlog.sendMessage(message).queue(msg -> {
+            modlogCache.put(msg.getIdLong(), msg);
+        });
     }
 
     @Override
@@ -155,22 +159,23 @@ public class ServerLogListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
+        ;
         if (!event.getGuild().getSelfMember().hasPermission(Permission.VIEW_AUDIT_LOGS)) {
             log(String.format(Emotes.LEAVE + " %s | %s has left or was kicked from the server.",
                     logTime(),
-                    getUser(event.getUser())));
+                    getUser(event.getMember())));
             return;
         }
 
         List<AuditLogEntry> kicks = event.getGuild().retrieveAuditLogs().type(ActionType.KICK).complete();
-        if (!kicks.isEmpty() && Instant.now().getEpochSecond() - kicks.get(0).getTimeCreated().toInstant().getEpochSecond() <= 2 && kicks.get(0).getTargetIdLong() == Objects.requireNonNull(event.getMember()).getUser().getIdLong()) {
+        if (!kicks.isEmpty() && Instant.now().getEpochSecond() - kicks.get(0).getTimeCreated().toInstant().getEpochSecond() <= 2 && kicks.get(0).getTargetIdLong() == event.getMember().getUser().getIdLong()) {
             log(String.format(Emotes.KICK + "%s | %s was kicked.",
                     logTime(),
-                    getUser(event.getUser())));
+                    getUser(event.getMember())));
         } else {
             log(String.format(Emotes.LEAVE + " %s | %s has left the server.",
                     logTime(),
-                    getUser(event.getUser())));
+                    getUser(event.getMember())));
         }
     }
 
@@ -239,7 +244,7 @@ public class ServerLogListener extends ListenerAdapter {
     @Override
     public void onUserUpdateName(UserUpdateNameEvent event) {
         List<Guild> userGuilds = event.getJDA().getGuilds().stream().filter(g -> g.getMember(event.getUser()) != null).collect(Collectors.toList());
-        for (Guild guild : userGuilds) {
+        for (Guild ignored : userGuilds) {
             if (serverlog == null) return;
 
             log(String.format(Emotes.CHANGE + " %s | %s Changed their username `%s` ➥ `%s`",
@@ -291,8 +296,8 @@ public class ServerLogListener extends ListenerAdapter {
 
     @Override
     public void onGuildUpdateOwner(GuildUpdateOwnerEvent event) {
-        String before = getTag(Objects.requireNonNull(event.getOldOwner()));
-        String after = getTag(Objects.requireNonNull(event.getNewOwner()));
+        String before = getTag(event.getOldOwner());
+        String after = getTag(event.getNewOwner());
 
         log(String.format(Emotes.WARN + " %s | **%s** transferred owner ship to **%s**",
                 logTime(),
