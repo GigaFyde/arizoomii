@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.sentry:sentry-logback:4.0.0'
+    implementation 'io.sentry:sentry-logback:5.0.1'
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
     // https://mvnrepository.com/artifact/com.google.guava/guava
@@ -39,13 +39,7 @@ dependencies {
 
 jib {
     from {
-        image = 'arm64v8/openjdk:11-jre'
-        platforms {
-            platform {
-                architecture = 'arm64'
-                os = 'linux'
-            }
-        }
+        image = 'openjdk:11.0.10-jre-slim'
     }
     container {
         mainClassName='dev.gigafyde.arizoomii.Main'
