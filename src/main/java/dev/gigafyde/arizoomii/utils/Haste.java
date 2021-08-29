@@ -17,19 +17,18 @@ public class Haste {
 
     public static String paste(String input) {
         try {
-            RequestBody body = RequestBody.create(MediaType.parse("text/plain; charset=utf-8"), input);
+            RequestBody body = RequestBody.create(input, MediaType.parse("text/plain; charset=utf-8"));
             Request request = new Request.Builder()
                     .url("https://hastebin.com/documents")
                     .post(body)
                     .build();
-
             Response response = httpClient.newCall(request).execute();
             @SuppressWarnings("ConstantConditions") JSONObject json = new JSONObject(response.body().string());
-
             return "https://hastebin.com/" + json.getString("key");
         } catch (IOException | NullPointerException | JSONException e) {
             LoggerFactory.getLogger(Haste.class).error("Failed to generate paste", e);
             return null;
         }
     }
+
 }
