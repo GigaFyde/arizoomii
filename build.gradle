@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.sentry:sentry-logback:5.0.1'
+    implementation 'io.sentry:sentry-logback:5.5.0'
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
     // https://mvnrepository.com/artifact/com.google.guava/guava
